@@ -1,0 +1,335 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<title>NUS Print Queue Viewer</title> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+	<link rel="stylesheet" href="themes/themeC.min.css" />
+	<link href='http://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+	<link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"><!--haoyang-->
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+	<style type="text/css">
+		body * {
+			font-family: Rockwell, Helvetica, sans-serif; //Lato
+			font-size: 15px;}
+		#cs {
+			margin: 0px 10px 0px 10px;}
+		#header {
+			margin-left: 20px;
+			margin-bottom: 0px;
+			margin-top: 15px;}
+		h1 {
+			font-family: Rokkitt, CicleGordita, Helvetica, sans-serif;
+			font-size: 28px;
+			letter-spacing: 0.0em;
+			color: Purple;
+			margin-top: 0px}
+		.nus {
+			font-family:  Rokkitt, SFSlapstickComicRegular, Helvetica, sans-serif;
+			font-size: 35px;
+			letter-spacing: 0.0em;
+			color: Purple;
+			margin-top: 0px;}
+		.sub-header {
+			font-size: 15px;
+			margin-top: 0px;
+			margin-bottom: 0px;}
+		@font-face {
+			font-family: 'CicleGordita';
+			src: url('fonts/Cicle_Gordita-webfont.eot');
+			src: url('fonts/Cicle_Gordita-webfont.eot?#iefix') format('embedded-opentype'),
+				 url('fonts/Cicle_Gordita-webfont.woff') format('woff'),
+				 url('fonts/Cicle_Gordita-webfont.ttf') format('truetype'),
+				 url('fonts/Cicle_Gordita-webfont.svg#CicleGordita') format('svg');
+			font-weight: normal;
+			font-style: normal;}
+		@font-face {
+			font-family: 'SFSlapstickComicRegular';
+			src: url('fonts/SF_Slapstick_Comic-webfont.eot');
+			src: url('fonts/SF_Slapstick_Comic-webfont.eot?#iefix') format('embedded-opentype'),
+				 url('fonts/SF_Slapstick_Comic-webfont.woff') format('woff'),
+				 url('fonts/SF_Slapstick_Comic-webfont.ttf') format('truetype'),
+				 url('fonts/SF_Slapstick_Comic-webfont.svg#SFSlapstickComicRegular') format('svg');
+			font-weight: normal;
+			font-style: normal;}
+	</style>
+	
+	<script type="text/javascript">
+		
+		var globalCLPrintingQV = 0;
+		var globalCLPrintTimeV = 0;
+		var globalYIHPrintingQV = 0;
+		var globalYIHPrintTimeV = 0;
+		var globalCOM1L1PrintingQV = 0;
+		var globalCOM1L1PrintTimeV = 0;
+		
+		
+		jQuery(function($){ 			
+			
+			$.get( 'getCLPrintingQ.php', function(CLPrintingQV){ 
+				$('#CLPrintingQTag').html(CLPrintingQV); 
+				globalCLPrintingQV = CLPrintingQV;
+			});
+			
+			$.get( 'getCLPrintingData.php', function(CLPrintingDataV){ 
+				$('#CLPrintingDataTag').html(CLPrintingDataV); 
+			}); 
+			
+			$.get( 'getCLPrintTime.php', function(CLPrintTimeV){ 
+				$('#CLPrintTimeTag').html(CLPrintTimeV); 
+			}); 
+			
+			$.get( 'getYIHPrintingQ.php', function(YIHPrintingQV){ 
+				$('#YIHPrintingQTag').html(YIHPrintingQV); 
+				globalYIHPrintingQV = YIHPrintingQV;
+			});
+			
+			$.get( 'getYIHPrintingData.php', function(YIHPrintingDataV){ 
+				$('#YIHPrintingDataTag').html(YIHPrintingDataV); 
+			}); 
+			
+			$.get( 'getYIHPrintTime.php', function(YIHPrintTimeV){ 
+				$('#YIHPrintTimeTag').html(YIHPrintTimeV); 
+			}); 
+			
+			$.get( 'getCOM1L1PrintingQ.php', function(COM1L1PrintingQV){ 
+				$('#COM1L1PrintingQTag').html(COM1L1PrintingQV); 
+				globalCOM1L1PrintingQV = COM1L1PrintingQV;
+			});
+			
+			$.get( 'getCOM1L1PrintingData.php', function(COM1L1PrintingDataV){ 
+				$('#COM1L1PrintingDataTag').html(COM1L1PrintingDataV); 
+			}); 
+			$.get( 'getCOM1L1PrintTime.php', function(COM1L1PrintTimeV){ 
+				$('#COM1L1PrintTimeTag').html(COM1L1PrintTimeV); 
+			}); 
+		
+
+			setInterval(function(){ 
+				$.get( 'getCLPrintingQ.php', function(CLPrintingQV){ 
+					$('#CLPrintingQTag').html(CLPrintingQV); 
+					globalCLPrintingQV = CLPrintingQV;
+				}); 
+				$.get( 'getCLPrintingData.php', {numOfRows: globalCLPrintingQV}, function(CLPrintingDataV){ 
+					$('#CLPrintingDataTag').html(CLPrintingDataV); 
+				}); 
+				// The tag is used to create a span of that id. For time, I'm not using the tag as of now
+				$.get( 'getCLPrintTime.php', function(CLPrintTimeV){ 
+					$('#CLPrintTimeTag').html(CLPrintTimeV);
+					globalCLPrintTimeV = CLPrintTimeV;
+				}); 
+				$.get( 'getYIHPrintingQ.php', function(YIHPrintingQV){ 
+					$('#YIHPrintingQTag').html(YIHPrintingQV); 
+					globalYIHPrintingQV = YIHPrintingQV;
+				}); 
+				$.get( 'getYIHPrintingData.php', {numOfRows: globalYIHPrintingQV}, function(YIHPrintingDataV){ 
+					$('#YIHPrintingDataTag').html(YIHPrintingDataV); 
+				}); 
+				// The tag is used to create a span of that id. For time, I'm not using the tag as of now
+				$.get( 'getYIHPrintTime.php', function(YIHPrintTimeV){ 
+					$('#YIHPrintTimeTag').html(YIHPrintTimeV);
+					globalYIHPrintTimeV = YIHPrintTimeV;
+				}); 
+				$.get( 'getCOM1L1PrintingQ.php', function(COM1L1PrintingQV){ 
+					$('#COM1L1PrintingQTag').html(COM1L1PrintingQV); 
+					globalCOM1L1PrintingQV = COM1L1PrintingQV;
+				}); 
+				$.get( 'getCOM1L1PrintingData.php', {numOfRows: globalCOM1L1PrintingQV}, function(COM1L1PrintingDataV){ 
+					$('#COM1L1PrintingDataTag').html(COM1L1PrintingDataV); 
+				}); 
+				// The tag is used to create a span of that id. For time, I'm not using the tag as of now
+				$.get( 'getCOM1L1PrintTime.php', function(COM1L1PrintTimeV){ 
+					$('#COM1L1PrintTimeTag').html(COM1L1PrintTimeV);
+					globalCOM1L1PrintTimeV = COM1L1PrintTimeV;
+				}); 
+							
+				
+			},5000); // 5000ms == 5 seconds 
+		}); 
+
+		var CLcounter=setInterval("CLtimer()", 1000);
+		function CLtimer()
+		{
+			var timeMins, timeSeconds;
+			if(globalCLPrintTimeV==0 && globalCLPrintingQV==0)
+				document.getElementById("CLStatusPic").src="images/green-dot2.png";
+			else if(globalCLPrintTimeV<240)
+				document.getElementById("CLStatusPic").src="images/yellow-dot2.png";
+			else 
+				document.getElementById("CLStatusPic").src="images/red-dot2.png";
+			
+			
+			if(globalCLPrintTimeV>=60)
+			{
+				timeMins = parseInt(globalCLPrintTimeV/60);
+				timeSeconds = globalCLPrintTimeV%60;
+				document.getElementById("CLtimerID").innerHTML=timeMins + " min(s) " + timeSeconds + " sec(s)";
+			}
+			else
+				document.getElementById("CLtimerID").innerHTML=globalCLPrintTimeV + " sec(s)";
+			
+			globalCLPrintTimeV--;
+			if(globalCLPrintTimeV < 0)
+				globalCLPrintTimeV = 0;
+		}	
+		
+		var YIHcounter=setInterval("YIHtimer()", 1000);
+		function YIHtimer()
+		{
+			var timeMins, timeSeconds;
+			
+			if(globalYIHPrintTimeV==0 && globalYIHPrintingQV==0)
+				document.getElementById("YIHStatusPic").src="images/green-dot2.png";
+			else if(globalYIHPrintTimeV<240)
+				document.getElementById("YIHStatusPic").src="images/yellow-dot2.png";
+			else 
+				document.getElementById("YIHStatusPic").src="images/red-dot2.png";
+			
+			if(globalYIHPrintTimeV>=60)
+			{
+				timeMins = parseInt(globalYIHPrintTimeV/60);
+				timeSeconds = globalYIHPrintTimeV%60;
+				document.getElementById("YIHtimerID").innerHTML=timeMins + " min(s) " + timeSeconds + " sec(s)";
+			}
+			else
+				document.getElementById("YIHtimerID").innerHTML=globalYIHPrintTimeV + " sec(s)";
+			
+			globalYIHPrintTimeV--;
+			if(globalYIHPrintTimeV < 0)
+				globalYIHPrintTimeV = 0;
+		}
+		
+		var COM1L1counter=setInterval("COM1L1timer()", 1000);
+		function COM1L1timer()
+		{
+			var timeMins, timeSeconds;
+			
+			if(globalCOM1L1PrintTimeV==0 && globalCOM1L1PrintingQV==0)
+				document.getElementById("COM1L1StatusPic").src="images/green-dot2.png";
+			else if(globalCOM1L1PrintTimeV<240)
+				document.getElementById("COM1L1StatusPic").src="images/yellow-dot2.png";
+			else 
+				document.getElementById("COM1L1StatusPic").src="images/red-dot2.png";
+			if(globalCOM1L1PrintTimeV>=60)
+			{
+				timeMins = parseInt(globalCOM1L1PrintTimeV/60);
+				timeSeconds = globalCOM1L1PrintTimeV%60;
+				document.getElementById("COM1L1timerID").innerHTML=timeMins + " min(s) " + timeSeconds + " sec(s)";
+			}
+			else
+				document.getElementById("COM1L1timerID").innerHTML=globalCOM1L1PrintTimeV + " sec(s)";
+			
+			globalCOM1L1PrintTimeV--;
+			if(globalCOM1L1PrintTimeV < 0)
+				globalCOM1L1PrintTimeV = 0;
+		}
+	</script>	
+</head> 
+
+<body> 
+
+<!-- Start of first page: #one -->
+<div data-role="page" id="one" data-theme="f">
+
+	<div id="header">
+		<!--<h1>print<span class="nus">NUS</span></h1>-->
+		<img src="images/logo.png"/>
+		<p class="sub-header"><i>&nbsp&nbsp&nbsp"Check online! Queue no more!"</i></p>
+	</div><!-- /header -->
+
+	<div data-role="content">
+		<div data-role="collapsible-set" id="cs" data-theme="d" data-content-theme="d">
+			<div data-role="collapsible" data-iconpos="right" id="YIHdiv">
+				<h3><img id="YIHStatusPic" src="images/green-dot2.png"/>&nbspCBLC@YIH (2 printers)</h3>
+
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e"">
+					<h4>
+					<span id='YIHPrintingQTag'>Retrieving...</span>&nbsp job(s) printing now<br />
+					</h4>
+					<span id='YIHPrintingDataTag'>Retrieving...</span>
+					<br />
+				</div>
+				<h5>Est. printing time: <span id="YIHtimerID"></span> </h5> </p>
+
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="CLdiv">
+				<h3><img id="CLStatusPic" src="images/green-dot2.png"/>&nbspCentral Library (3 printers)</h3>
+				
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+					<h4>
+					<span id='CLPrintingQTag'>Retrieving...</span>&nbsp job(s) printing now<br />
+					</h4>
+					<span id='CLPrintingDataTag'>Retrieving...</span>
+					<br />
+				</div>
+				<h5>Est. printing time: <span id="CLtimerID"></span> </h5> </p>
+
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="HSSMdiv">
+				<h3><img id="BizStatusPic" src="images/green-dot2.png"/>&nbspHSSM/Biz Library (2 printers)</h3>
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+				<h4>0 job(s) printing now</h4>
+				</div>
+				<h5>Est. printing time: 0 secs</h5>
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="Medicaldiv">
+				<h3><img id="MedLibStatusPic" src="images/green-dot2.png"/>&nbspMedical Library (2 printers)</h3>
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+				<h4>0 job(s) printing now</h4>
+				</div>
+				<h5>Est. printing time: 0 secs</h5>
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="Musicdiv">
+				<h3><img id="MusicLibStatusPic" src="images/green-dot2.png"/>&nbspMusic Library (2 printers)</h3>
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+				<h4>0 job(s) printing now</h4>
+				</div>
+				<h5>Est. printing time: 0 secs</h5>
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="Sciencediv">
+				<h3><img id="ScienceStatusPic" src="images/green-dot2.png"/>&nbspScience Library (4 printers)</h3>
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+				<h4>0 job(s) printing now</h4>
+				</div>
+				<h5>Est. printing time: 0 secs</h5>
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="COM1L1div">
+				<h3><img id="COM1L1StatusPic" src="images/green-dot2.png"/>&nbspSoC Level 1 (3 printers)</h3>
+
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+					<h4>
+					<span id='COM1L1PrintingQTag'>Retrieving...</span>&nbsp job(s) printing now<br />
+					</h4>
+					<span id='COM1L1PrintingDataTag'>Retrieving...</span>
+					<br />
+				</div>
+				<h5>Est. printing time: <span id="COM1L1timerID"></span> </h5> </p>			
+			</div>
+			<div data-role="collapsible" data-iconpos="right" id="UTowndiv">
+				<h3><img id="UTownStatusPic" src="images/green-dot2.png"/>&nbspUTown ERC (6 printers)</h3>
+				<div data-role="collapsible" data-iconpos="right" data-mini=true data-theme="e" >
+				<h4>0 job(s) printing now</h4>
+				</div>
+				<h5>Est. printing time: 0 secs</h5>
+			</div>
+		</div>
+	</div>
+
+	<div data-role="footer" data-position="fixed" class="ui-bar" data-theme="b">
+		<div class="ui-grid-b">
+			<div class="ui-block-a">
+			</div>
+			<div class="ui-block-b">
+			</div>
+			<div class="ui-block-c">
+				<a href="map.html" rel="external" data-role="button" data-icon="arrow-r" data-iconpos="right" style="float: right; margin-right:27px;"> Find nearest printer! </a>
+			</div>
+		</div>
+	</div>
+</div><!-- /page one -->
+
+</body>
+</html>
